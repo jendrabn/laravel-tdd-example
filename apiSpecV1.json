@@ -1,0 +1,289 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "API Examples",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1/api/v1"
+        }
+    ],
+    "components": {
+        "schemas": {
+            "User": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 7
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Scottish Fold"
+                    },
+                    "username": {
+                        "type": "string",
+                        "example": "scottish77"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "scottish@mail.com"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "email"
+                ]
+            }
+        },
+        "responses": {
+            "ErrorValidation422": {
+                "description": "Validation Error (HTTP Status 422)",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string"
+                                },
+                                "errors": {
+                                    "type": "object",
+                                    "properties": {
+                                        "input": {
+                                            "type": "array",
+                                            "items": {
+                                                "example": "The input is invalid."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "ErrorUnauthenticated401": {
+                "description": "Unauthenticated (HTTP Status 401)",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "example": "Unauthenticated."
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "ErorrRateLimit429": {
+                "description": "Rate Limit (HTTP Status 429)",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "message": {
+                                    "type": "string",
+                                    "example": "Too many attempts."
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "AuthSanctum": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+    "paths": {
+        "/login": {
+            "post": {
+                "summary": "User Login",
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string",
+                                        "description": "can login with email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "required": [
+                                    "username",
+                                    "password"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login - SUCCESS",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "$ref": "#/components/schemas/User"
+                                                },
+                                                "access_token": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "required": [
+                                                "user",
+                                                "access_token"
+                                            ]
+                                        }
+                                    },
+                                    "required": [
+                                        "data"
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/ErrorUnauthenticated401"
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ErrorValidation422"
+                    },
+                    "429": {
+                        "$ref": "#/components/responses/ErorrRateLimit429"
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "summary": "User Registration",
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "minLength": 3,
+                                        "maxLength": 50,
+                                        "example": "Scottish Fold"
+                                    },
+                                    "username": {
+                                        "type": "string",
+                                        "uniqueItems": true,
+                                        "minLength": 3,
+                                        "maxLength": 30,
+                                        "example": "scottish77",
+                                        "description": "alpha dash"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "uniqueItems": true,
+                                        "minLength": 5,
+                                        "maxLength": 130,
+                                        "example": "scottish@mail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "description": "1 uppercase letter, 1 lowercase letter & 1 number",
+                                        "minLength": 6,
+                                        "maxLength": 25,
+                                        "example": "secret"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "description": "Same value as password field",
+                                        "example": "secret"
+                                    }
+                                },
+                                "required": [
+                                    "name",
+                                    "username",
+                                    "password",
+                                    "password_confirmation"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registration - SUCCESS",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "user": {
+                                                    "$ref": "#/components/schemas/User"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "$ref": "#/components/responses/ErrorValidation422"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "summary": "User Logout",
+                "tags": [
+                    "Auth"
+                ],
+                "security": [
+                    {
+                        "AuthSanctum": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Logout - SUCCESS"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/ErrorUnauthenticated401"
+                    }
+                }
+            }
+        }
+    }
+}
