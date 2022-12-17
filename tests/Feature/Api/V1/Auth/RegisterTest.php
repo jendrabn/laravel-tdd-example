@@ -55,7 +55,7 @@ class RegisterTest extends TestCase
                         'email' => $payload['email']
                     ]
                 ]
-            ])->dump();
+            ]);
 
         $this->assertDatabaseHas('users', ['name' => $payload['name'], 'email' => $payload['email']]);
 

@@ -22,3 +22,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('throttle:login')->post('/v1/login', [AuthController::class, 'login'])->name('api.v1.login');
 Route::post('/v1/register', [AuthController::class, 'register'])->name('api.v1.register');
+Route::middleware('auth:sanctum')->post('/v1/logout', [AuthController::class, 'logout'])->name('api.v1.logout');
