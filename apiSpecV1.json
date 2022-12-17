@@ -23,10 +23,6 @@
                         "type": "string",
                         "example": "Scottish Fold"
                     },
-                    "username": {
-                        "type": "string",
-                        "example": "scottish77"
-                    },
                     "email": {
                         "type": "string",
                         "format": "email",
@@ -122,9 +118,9 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "username": {
+                                    "email": {
                                         "type": "string",
-                                        "description": "can login with email"
+                                        "format": "email"
                                     },
                                     "password": {
                                         "type": "string",
@@ -132,7 +128,7 @@
                                     }
                                 },
                                 "required": [
-                                    "username",
+                                    "email",
                                     "password"
                                 ]
                             }
@@ -199,14 +195,6 @@
                                         "maxLength": 50,
                                         "example": "Scottish Fold"
                                     },
-                                    "username": {
-                                        "type": "string",
-                                        "uniqueItems": true,
-                                        "minLength": 3,
-                                        "maxLength": 30,
-                                        "example": "scottish77",
-                                        "description": "alpha dash"
-                                    },
                                     "email": {
                                         "type": "string",
                                         "format": "email",
@@ -230,7 +218,7 @@
                                 },
                                 "required": [
                                     "name",
-                                    "username",
+                                    "email",
                                     "password",
                                     "password_confirmation"
                                 ]
