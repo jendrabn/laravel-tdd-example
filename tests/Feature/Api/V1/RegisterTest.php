@@ -3,7 +3,7 @@
 namespace Tests\Feature\Api\V1;
 
 use App\Http\Controllers\Api\V1\AuthController;
-use App\Http\Requests\Api\V1\RegisterRequest;
+use App\Http\Requests\Api\V1\Auth\RegisterRequest;
 use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -56,12 +56,11 @@ class RegisterTest extends TestCase
                 ]
             ]);
 
-        $this->assertDatabaseHas('users', ['email' => $payload['email']]);
+        $this->assertDatabaseHas('users', ['name' => $payload['name'], 'email' => $payload['email']]);
 
         $user = User::whereEmail($payload['email'])->first();
 
         $this->assertTrue($user->hasRole('user'));
-        $this->assertAuthenticatedAs($user);
     }
 
     /** @test */
@@ -76,7 +75,7 @@ class RegisterTest extends TestCase
         $this->assertValidationRules([
             'name' => ['required', 'string', 'min:3', 'max:50'],
             'email' => ['required', 'string', 'email', 'min:5', 'max:130'],
-            'password' => ['required', 'string', 'min:6', 'max:25', Password::min(6)->mixedCase()->numbers()],
+            'password' => ['required', 'string', 'min:6', 'max:25', Password::min(6)->mixedCase()->numbers(), 'confirmed'],
         ], (new RegisterRequest())->rules());
     }
 
