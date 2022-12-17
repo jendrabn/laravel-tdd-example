@@ -124,7 +124,7 @@ class LoginTest extends TestCase
         $response->assertStatus(422)
             ->assertJsonStructure([
                 'message',
-                'errors' => ['*']
+                'errors' => ['*' => []]
             ])
             ->assertJsonValidationErrors(['email', 'password']);
     }
