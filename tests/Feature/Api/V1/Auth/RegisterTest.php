@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Api\V1;
+namespace Tests\Feature\Api\V1\Auth;
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Requests\Api\V1\Auth\RegisterRequest;
