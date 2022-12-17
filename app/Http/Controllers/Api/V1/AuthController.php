@@ -46,22 +46,26 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => bcrypt($request->password)
-        ]);
+        $user = User::create($request->all())->assignRole('user');
 
-        $user->assignRole('user');
+        return (new UserResource($user))->response()->setStatusCode(201);
 
-        return response()->json([
-            'data' => [
-                'user' => [
-                    'id' => $user->id,
-                    'name' => $user->name,
-                    'email' => $user->email
-                ]
-            ]
-        ], 201);
+        // $user = User::create([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'password' => bcrypt($request->password)
+        // ]);
+
+        // $user->assignRole('user');
+
+        // return response()->json([
+        //     'data' => [
+        //         'user' => [
+        //             'id' => $user->id,
+        //             'name' => $user->name,
+        //             'email' => $user->email
+        //         ]
+        //     ]
+        // ], 201);
     }
 }

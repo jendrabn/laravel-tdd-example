@@ -8,6 +8,7 @@ use App\Models\User;
 use Database\Seeders\RoleAndPermissionSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Tests\TestCase;
 
@@ -54,12 +55,13 @@ class RegisterTest extends TestCase
                         'email' => $payload['email']
                     ]
                 ]
-            ]);
+            ])->dump();
 
         $this->assertDatabaseHas('users', ['name' => $payload['name'], 'email' => $payload['email']]);
 
         $user = User::whereEmail($payload['email'])->first();
 
+        $this->assertTrue(Hash::check($payload['password'], $user->password));
         $this->assertTrue($user->hasRole('user'));
     }
 

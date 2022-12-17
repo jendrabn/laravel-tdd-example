@@ -30,4 +30,11 @@ class RegisterRequest extends FormRequest
             'password' => ['required', 'string', 'min:6', 'max:25', Password::min(6)->mixedCase()->numbers(), 'confirmed'],
         ];
     }
+
+    public function passedValidation()
+    {
+        $this->merge([
+            'password' => bcrypt($this->password)
+        ]);
+    }
 }
